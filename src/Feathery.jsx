@@ -30,13 +30,14 @@ function Feathery({
             const featheryClient = new FeatheryClient(sdkKey, userKey);
             dispatch({
                 type: actionTypes.START,
-                client: featheryClient
+                client: featheryClient,
             });
-            const settings = await featheryClient.fetch();
-            dispatch({
+            featheryClient.resolve()
+              .then(settings => dispatch({
                 type: actionTypes.LOADED,
                 settings: settings,
-            });
+              }))
+              .catch(error => dispatch({ type: actionTypes.ERROR, error }));
         } catch (error) {
             dispatch({ type: actionTypes.ERROR, error });
         }
